@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	var horizontalPosition, depth int
+	var horizontalPosition, aim, depth int
 
 	f, err := os.Open("input.txt")
 
@@ -22,18 +22,18 @@ func main() {
 			direction := instructions[0]
 			amount, _ := strconv.Atoi(instructions[1])
 
-			if direction == "forward" {
-				horizontalPosition += amount
-			}
 			if direction == "down" {
-				depth += amount
+				aim += amount
 			}
 			if direction == "up" {
-				depth -= amount
+				aim -= amount
+			}
+			if direction == "forward" {
+				horizontalPosition += amount
+				depth += aim * amount
 			}
 		}
 
 		fmt.Println(horizontalPosition * depth)
 	}
-
 }
