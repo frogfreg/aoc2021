@@ -45,25 +45,49 @@ func main() {
 
 	}
 
-	func() {
-		for _, num := range selectedNums {
-			for boardIndex, board := range boards {
-				for rowIndex, row := range board {
-					for colIndex, columnNumber := range row {
-						if num == columnNumber {
-							boards[boardIndex][rowIndex][colIndex] = "m"
-							if checkWin(board) {
-								selectedNumInt, _ := strconv.Atoi(num)
+	boardMap := map[int]matrix{}
+	lastWinnerIndex := 0
+	var winnerNum string
 
-								fmt.Println(sumBoard(board) * selectedNumInt)
-								return
+	for _, num := range selectedNums {
+		for boardIndex, board := range boards {
+			for rowIndex, row := range board {
+				for colIndex, columnNumber := range row {
+					if num == columnNumber {
+						boards[boardIndex][rowIndex][colIndex] = "m"
+						if checkWin(board) {
+
+							_, keyExists := boardMap[boardIndex]
+
+							if !keyExists {
+
+								tempBoard := make(matrix, len(board))
+
+								for i, _ := range tempBoard {
+									tempBoard[i] = make([]string, len(board[0]))
+								}
+
+								for i := 0; i < len(board); i++ {
+									for j := 0; j < len(board[1]); j++ {
+										tempBoard[i][j] = board[i][j]
+									}
+								}
+
+								lastWinnerIndex = boardIndex
+								winnerNum = num
+								boardMap[boardIndex] = tempBoard
 							}
 						}
 					}
 				}
 			}
 		}
-	}()
+	}
+
+	winnerNumInt, _ := strconv.Atoi(winnerNum)
+	result := sumBoard(boardMap[lastWinnerIndex]) * winnerNumInt
+
+	fmt.Println(result)
 
 }
 
